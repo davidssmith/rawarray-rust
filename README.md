@@ -1,6 +1,9 @@
 Welcome to the RawArray crate!
 ===========================
 
+[![Crates.io](https://img.shields.io/crates/v/rawarray.svg)](https://crates.io/crates/rawarray/)
+[![docs.rs](https://docs.rs/rawarray/badge.svg)](https://docs.rs/rawarray/)
+
 Introduction
 ------------
 
