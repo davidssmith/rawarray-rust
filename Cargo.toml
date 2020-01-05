@@ -1,8 +1,12 @@
 [package]
 name = "rawarray"
+description = "simple file format for retrievably storing n-dimensional arrays"
 version = "0.1.0"
 authors = ["David S. Smith <david.smith@gmail.com>"]
 edition = "2018"
+readme = "README.md"
+categories = ["science", "mathematics", "encoding", "filesystem", "data-structures"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
