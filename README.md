@@ -1,14 +1,14 @@
-Welcome to the RA package!
+Welcome to the RawArray crate!
 ===========================
 
 Introduction
 ------------
 
-RA is a simple file format for storing n-dimensional arrays. RA stands for **raw array**
-and should be pronounced *arr-ay*, although it is not a coincidence that the
-mispronunciation *rah* (as in "raw" in some dialects) also makes sense.
+RawArray is a simple file format for storing n-dimensional arrays. The extension
+`.ra` can be pronounced *arr-ay* or *rah* (as in "raw", or the Egyption sun
+god).
 
-RA was designed to be portable, fast, and storage
+RawArray was designed to be portable, fast, and storage
 efficient. For scientific applications in particular, it can allow the simple
 storage of large arrays without a separate header file to store the
 dimensions and type metadata. 
@@ -16,13 +16,13 @@ dimensions and type metadata.
 I believe the world doesn't need another hierarchical data container. We already have one of 
 those---it's called a filesystem. What is needed is a simple one-to-one mapping of data structures to disk files that preserves metadata and is fast and simple to read and write.
 
-In addition to int, uint, and float of arbitrary sizes, RA also supports
+In addition to int, uint, and float of arbitrary sizes, RawArray also supports
 
 (1) **complex floats**: which other common formats, such as HDF5, don't have.
 
-(2) **composite types**: RA handles reading and writing these, but the encoding and decoding of those is left to the user, since only they can know the structure of their `struct`. Decoding can be as simple as a typecast, however, for types of fixed size.
+(2) **composite types**: RawArray handles reading and writing these, but the encoding and decoding of those is left to the user, since only they can know the structure of their `struct`. Decoding can be as simple as a typecast, however, for types of fixed size. In Rust they are read as a `Vec<T>`, so you are free to handle it as you like.
 
-As an aside, the RA format is technically recursive (or fractal?!). You could store an array of RA files in a RA file if you want by defining the file as a composite type.
+As an aside, the RawArray format is technically recursive (or fractal?!). You could store an array of RawArray files in a RawArray file if you want by defining the file as a composite type.
 
 Format
 -----------
@@ -77,13 +77,13 @@ The data is written and read as the binary representation of the hardware you ar
 
 ### Memory Order
 
-The RA format is **column major**, so the first dimension will be the fastest varying one in memory. This decision was made because the majority of scientific languages are traditionally column major, and although C is technically row major it is actually agnostic in applications where multi-dimensional arrays are accessed through computed linear indices (e.g. CUDA).  Of the supplied examples, all are column major except Python. In the case of Python, instead of reading the array into Python and reordering to non-optimal stride, we simply transpose the dimensions before writing and after reading. This means the array looks transposed in Python, but the same dimensions have the same strides in all languages. In other words, the last dimension of the array in Python will be the first one in Julia and Matlab.
+The RawArray format is **column major**, so the first dimension will be the fastest varying one in memory. This decision was made because the majority of scientific languages are traditionally column major, and although C is technically row major it is actually agnostic in applications where multi-dimensional arrays are accessed through computed linear indices (e.g. CUDA).  Of the supplied examples, all are column major except Python. In the case of Python, instead of reading the array into Python and reordering to non-optimal stride, we simply transpose the dimensions before writing and after reading. This means the array looks transposed in Python, but the same dimensions have the same strides in all languages. In other words, the last dimension of the array in Python will be the first one in Julia and Matlab.
 
 
 
 File Introspection
 ------------------
-To get a better handle on the format of an RA file, let's look inside one. If you are on a Unix system or have Cygwin installed on Windows, you can examine the contents of an RA file using command line tools.  For this section, we will use the `test.ra` file provided in the `julia/` subdirectory. 
+To get a better handle on the format of an RawArray file, let's look inside one. If you are on a Unix system or have Cygwin installed on Windows, you can examine the contents of an RawArray file using command line tools.  For this section, we will use the `test.ra` file provided in the `julia/` subdirectory. 
 
 First, let's pretend you don't know the dimensionality of the array. Then
 
@@ -97,7 +97,7 @@ First, let's pretend you don't know the dimensionality of the array. Then
 
 ```
 
-shows the dimension (2) as the second number on the third line. The command is extracting the first 48 bytes and formatting them as UInt64s. The ridiculous number listed first is the magic number indicating that this is an RA file. A slightly different command illuminates that:
+shows the dimension (2) as the second number on the third line. The command is extracting the first 48 bytes and formatting them as UInt64s. The ridiculous number listed first is the magic number indicating that this is an RawArray file. A slightly different command illuminates that:
 
 ```
 > od -a -N 16 test.ra
@@ -151,7 +151,7 @@ A data checksum or time stamp was deliberately not included in the format becaus
 
 Time stamping is also not necessary, because file systems already provide that. Adding a time stamp that changes upon rewrite or access also foils checksum attemps. HDF5 files are very difficult to checksum for this reason.  It is our belief that the checksum should depend upon data properties only, not any chronology. Two files are identical if they contain identical data, no matter when they were created or accessed last.
 
-To checksum an RA file, simple run your local checksum command. For example, on
+To checksum an RawArray file, simple run your local checksum command. For example, on
 linux: 
 
 ```
