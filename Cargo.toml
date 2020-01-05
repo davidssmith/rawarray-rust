@@ -6,6 +6,9 @@ authors = ["David S. Smith <david.smith@gmail.com>"]
 edition = "2018"
 readme = "README.md"
 categories = ["science", "mathematics", "encoding", "filesystem", "data-structures"]
+homepage = "https://crates.io/crates/rawarray"
+repository = "https://github.com/davidssmith/rawarray-rust"
+license = "MIT"
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
