@@ -10,9 +10,6 @@ homepage = "https://crates.io/crates/rawarray"
 repository = "https://github.com/davidssmith/rawarray-rust"
 license = "MIT"
 
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 half = "1.4.0"
 #itertools = "0.8.2"
@@ -21,3 +18,7 @@ microbench = "0.5.0"
 ndarray = "0.13.0"
 num-traits = "0.2.10"
 num-complex = "0.2.3"
+
+[package.metadata.docs.rs]
+all-features = true
+
