@@ -64,17 +64,17 @@ The width of these types is defined separately in the `elbyte` field. For exampl
 * a single-precision complex float (pairs of 32-bit floats) would be `eltype = 4`, `elbyte = 8`;
 * a string would be `eltype = 2`, `elbyte = 1`, and `size` would contain the length of the string.
 
-The user-defined structure
+The user-defined struct
 
 ```
-struct foo {
-   char info[12];
-   uint32_t index;
-   double v[8];
+struct Foo {
+   info: [u8; 12],
+   index: u32,
+   v: [f32; 8],
 }
 ``` 
 
-contains a 12-byte string, a 4-byte int, and 8 8-byte floats, so the total size is 80 bytes. It would be coded as `eltype = 0`, `elbyte = 80`.
+contains a 12-byte array, a 4-byte int, and 8 8-byte floats, so the total size is 80 bytes. It would be coded as `eltype = 0`, `elbyte = 80`.
 
 The data is written and read as the binary representation of the hardware you are on. Right now **little endian is assumed**, but big endian support can be added if there is interest.
 

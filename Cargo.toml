@@ -19,6 +19,6 @@ ndarray = "0.13.0"
 num-traits = "0.2.10"
 num-complex = "0.2.3"
 
-[package.metadata.docs.rs]
-all-features = true
+#[package.metadata.docs.rs]
+#all-features = true
 
