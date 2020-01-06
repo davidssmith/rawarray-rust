@@ -8,8 +8,10 @@ Introduction
 ------------
 
 RawArray is a simple file format for storing n-dimensional arrays. The extension
-`.ra` can be pronounced *arr-ay* or *rah* (as in "raw", or the Egyption sun
+`.ra` can be pronounced *arr-ay* or *rah* (as in "raw", or the Egyptian sun
 god).
+
+![Ra](ra.svg)
 
 RawArray was designed to be portable, fast, and storage
 efficient. For scientific applications in particular, it can allow the simple
