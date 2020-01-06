@@ -9,8 +9,8 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="70"
-   height="153"
+   width="350"
+   height="768"
    id="svg2"
    sodipodi:version="0.32"
    inkscape:version="0.45.1"
@@ -573,14 +573,14 @@
      inkscape:current-layer="g3045"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="243"
-     inkscape:window-height="192"
+     inkscape:window-width="1214"
+     inkscape:window-height="960"
      inkscape:window-x="39"
      inkscape:window-y="6"
      showborder="true"
      inkscape:showpageshadow="true"
-     width="70"
-     height="153" />
+     width="350px"
+     height="768px" />
   <metadata
      id="metadata7">
     <rdf:RDF>
