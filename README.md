@@ -126,6 +126,13 @@ Here we are using `-j` to skip the first 64 bytes and `-f` to format the byte da
 Getting
 -------
 
+Implementations of RawArray exist for [Python, C, and
+Matlab](https://github.com/davidssmith/ra), and I have written a  Julia package called [RawArray.jl](https://github.com/davidssmith/RawArray.jl).
+
+And ultimately the format is simple enough for anyone to roll their own
+implementation on the fly, or cut corners, like skipping the header entirely and
+memory mapping the array data part of the file.
+
 ... TODO: explain cargo and add some binary utils ...
 
 Usage
