@@ -4,12 +4,15 @@ Welcome to the RawArray crate!
 [![Crates.io](https://img.shields.io/crates/v/rawarray.svg)](https://crates.io/crates/rawarray/)
 [![docs.rs](https://docs.rs/rawarray/badge.svg)](https://docs.rs/rawarray/)
 
+![Ra](ra.svg | width=70)
+
 Introduction
 ------------
 
 RawArray is a simple file format for storing n-dimensional arrays. The extension
-`.ra` can be pronounced *arr-ay* or *rah* (as in "raw", or the Egyption sun
+`.ra` can be pronounced *arr-ay* or *rah* (as in "raw", or the Egyptian sun
 god).
+
 
 RawArray was designed to be portable, fast, and storage
 efficient. For scientific applications in particular, it can allow the simple
