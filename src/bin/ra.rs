@@ -1,59 +1,50 @@
-//! Command line utilities for manipulating `RawArray` files.
-//!
-//!
-//!
-//!
+//! Command line utility for manipulating `RawArray` files.
 
 
-use argparse::{ArgumentParser, StoreTrue, Store};
 use rawarray::RawArray;
-use std::io;
+use std::env;
+use std::io::{self, Read, Seek, SeekFrom};
+use std::result::Result;
+use std::error::Error;
 
-
-fn ra_reshape(dims: &[u64]) {
-
-
+fn print_usage() {
+    println!("Usage:");
+    println!("   ra <head|flags|eltype|elbyte|size|ndims|dims|data> file.ra");
+    println!("   ra reshape file.ra dim0 dim1 dim2 ...");
+    println!("RawArray file tool");
 }
 
-fn usage() {
-
-
+fn read_u64_at<IO: Read + Seek>(r: &mut IO, offset: u64) -> u64 {
+    let mut buf = [0u8; 8];
+    r.seek(SeekFrom::Start(offset));
+    r.read_exact(&mut buf).expect("unable to read a u64");
+    u64::from_le_bytes(buf)
 }
 
-fn main() -> io::Result<()> {
-    println!("hi");
-
-
-    // reshape
-    // eltype
-    // elbyte
-    // size
-    // dims
-    // ndims
-    // nelem
-    // data_offset
-    //
-   
-    let mut input = String::new();
-    let mut cmd = String::new();
-    let mut initial_jump = 0;
-    {
-        let mut ap = ArgumentParser::new();
-        ap.set_description("ra: RawArray file tool");
-        //ap.refer(&mut verbose)
-        //    .add_option(&["-v", "--verbose"], StoreTrue, "Be verbose");
-        //ap.refer(&mut hide_keywords)
-        //    .add_option(&["-k", "--no-keywords"], StoreTrue, "Hide keywords");
-        //ap.refer(&mut hide_private)
-        //    .add_option(&["-p", "--no-private"], StoreTrue, "Hide private tags");
-        ap.refer(&mut initial_jump)
-            .add_option(&["-j", "--jump"], Store, "Jump to initial position");
-        ap.refer(&mut cmd)
-           .add_argument("cmd", Store, "Command to issue");
-        ap.refer(&mut input)
-           .add_argument("input", Store, "File or directory to process");
-        ap.parse_args_or_exit();
-    }
+fn main() -> Result<(),Box<dyn Error>> {
+    if env::args().len() < 3 {
+        print_usage();
+    } else {
+        let command = env::args().nth(1).unwrap(); 
+        let filename = env::args().next().unwrap();
+        let r = RawArray::valid_open(filename)?;
+        match command.as_ref() {
+            "head" => { }, 
+            "flags" => { println!("{:x}", read_u64_at(&mut r, 8)) },
+            "eltype" => { println!("{}", read_u64_at(&mut r, 16)) },
+            "elbyte" => { println!("{}", read_u64_at(&mut r, 24)) },
+            "size" => { println!("{}", read_u64_at(&mut r, 32)) },
+            "ndims" => { println!("{}", read_u64_at(&mut r, 40)) },
+            "dims" => { 
+                println!("{:x}", read_u64_at(&mut r, 8)) 
+            },
+            "data" => { },
+            "reshape" => { },
+            _ => { 
+                print_usage();
+            },
+        }
+    } 
 
     Ok(())
 }
