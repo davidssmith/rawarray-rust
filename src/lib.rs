@@ -37,7 +37,7 @@
 use std::{fmt, mem, slice};
 use std::fmt::{Debug, Display};
 use std::fs::File;
-use std::io::{self, Read, BufReader, BufWriter, Write};
+use std::io::{self, Read, BufReader, BufWriter, SeekFrom, Write};
 use std::path::Path;
 use half::prelude::*;
 use ndarray::{Array, ArrayD, Array1};
@@ -114,29 +114,28 @@ impl RawArrayType for f16 { fn ra_type_code() -> u64 { 3 } }
 
 
 /// Wraps reading for some simpler parsing code
-struct RawArrayFile {
-    inner: Box<dyn Read>;
-}
-
+struct RawArrayFile(BufReader);
 
 impl RawArrayFile {
     /// Open and validate a `RawArray` file and return a `File` handle, 
     /// but don't attempt to parse.
     pub fn valid_open(filename: &str) -> io::Result<RawArrayFile> {
-        let f = BufReader::newFile::open(filename)?;
+        let f = File::open(filename)?;
+        let r = BufReader::new(f);
         let magic = read_u64(&mut f);
         if magic != MAGIC_NUMBER {
             panic!("Not a RawArray file.");
         }
-        RawArrayFile(f)
+        Ok(RawArrayFile(r))
     }
 
-    fn open(filename: File) {
-
-
+    pub fn u64_at(&mut self, offset: u64) -> u64 {
+        self.0.seek(SeekFrom::Start(offset));
+        let mut buf = [0u8; 8];
+        self.0.read_exact(&mut buf)?;
+        u64::from_le_bytes(buf)
     }
-
-
+}
 
 
 /// Container type for RawArrays 
