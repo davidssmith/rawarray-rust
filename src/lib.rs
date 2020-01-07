@@ -109,19 +109,34 @@ impl RawArrayType for f32 { fn ra_type_code() -> u64 { 3 } }
 impl RawArrayType for f64 { fn ra_type_code() -> u64 { 3 } }
 impl RawArrayType for Complex<f32> { fn ra_type_code() -> u64 { 4 } }
 impl RawArrayType for Complex<f64> { fn ra_type_code() -> u64 { 4 } }
+impl RawArrayType for bf16 { fn ra_type_code() -> u64 { 5 } }
+impl RawArrayType for f16 { fn ra_type_code() -> u64 { 3 } }
 
-impl RawArrayType for bf16 { 
-        //let data_typed = data_u16.iter().map(|n| bf16::from_bits(*n)).collect();
-    fn ra_type_code() -> u64 { 5 } 
+
+/// Wraps reading for some simpler parsing code
+struct RawArrayFile {
+    inner: Box<dyn Read>;
 }
 
-impl RawArrayType for f16 {
-    fn ra_type_code() -> u64 { 3 } 
-}
+
+impl RawArrayFile {
+    /// Open and validate a `RawArray` file and return a `File` handle, 
+    /// but don't attempt to parse.
+    pub fn valid_open(filename: &str) -> io::Result<RawArrayFile> {
+        let f = BufReader::newFile::open(filename)?;
+        let magic = read_u64(&mut f);
+        if magic != MAGIC_NUMBER {
+            panic!("Not a RawArray file.");
+        }
+        RawArrayFile(f)
+    }
+
+    fn open(filename: File) {
 
 
-//impl Num for f16 { }
-//impl Num for bf16 { }
+    }
+
+
 
 
 /// Container type for RawArrays 
