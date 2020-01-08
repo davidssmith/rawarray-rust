@@ -22,16 +22,36 @@ fn main() -> Result<(),Box<dyn Error>> {
         let filename = args.next().unwrap();
         let mut r = RawArrayFile::valid_open(&filename)?;
         match command.as_ref() {
-            "head" => { }, 
+            "head" => { 
+                let _magic = r.u64()?;
+                println!("flags: {:b}", r.u64()?);
+                println!("eltype: {}", r.u64()?);
+                println!("elbyte: {}", r.u64()?);
+                println!("size: {}", r.u64()?);
+                let ndims = r.u64()?;
+                println!("ndims: {}", ndims);
+                println!("dims: ");
+                for _ in 0..ndims {
+                    println!("\t- {}", r.u64()?);
+                }
+            }, 
             "flags" => { println!("{:x}", r.u64_at(8)?) },
             "eltype" => { println!("{}", r.u64_at(16)?) },
             "elbyte" => { println!("{}", r.u64_at(24)?) },
             "size" => { println!("{}", r.u64_at(32)?) },
             "ndims" => { println!("{}", r.u64_at(40)?) },
             "dims" => { 
-                println!("{:x}", r.u64_at(8)?) 
+                r.seek(40)?;
+                let ndims =  r.u64()?;
+                for _ in 0..ndims {
+                    print!("{} ", r.u64()?) 
+                }
+                println!();
             },
-            "data" => { },
+            "data" => { 
+                let ndims = r.u64_at(40)?;
+                println!("{}", 40 + ndims*8);
+            },
             "reshape" => { },
             _ => { 
                 print_usage();

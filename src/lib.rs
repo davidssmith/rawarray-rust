@@ -138,6 +138,21 @@ impl RawArrayFile {
         Ok(raf)
     }
 
+
+    /// Return next `u64` in the stream
+    pub fn u64(&mut self) -> io::Result<u64> {
+        let mut buf = [0u8; 8];
+        self.0.read_exact(&mut buf)?;
+        Ok(u64::from_le_bytes(buf))
+    }
+
+    /// Seek to given position in a RawArrayFile
+    pub fn seek(&mut self, loc: u64) -> io::Result<()> {
+        self.0.seek(SeekFrom::Current(loc as i64))?;
+        Ok(())
+    }
+
+
     /// Return a `u64` located at an offset within the file
     /// without affecting current reading location
     pub fn u64_at(&mut self, offset: u64) -> io::Result<u64> {
