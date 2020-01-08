@@ -37,7 +37,7 @@
 use std::{fmt, mem, slice};
 use std::fmt::{Debug, Display};
 use std::fs::File;
-use std::io::{self, Read, BufReader, BufWriter, SeekFrom, Write};
+use std::io::{self, BufRead, BufReader, BufWriter, Error, ErrorKind, Read, Seek, SeekFrom, Write};
 use std::path::Path;
 use half::prelude::*;
 use ndarray::{Array, ArrayD, Array1};
@@ -51,7 +51,9 @@ const ALL_KNOWN_FLAGS : u64 = FLAG_BIG_ENDIAN | FLAG_ENCODED | FLAG_BITS;
 // TODO: see if reading > 2 GB is a problem in Rust
 //const MAX_BYTES       : u64 = 1<<31;
 //
-const MAGIC_NUMBER    : u64 = 0x79_61_72_72_61_77_61_72;
+//const MAGIC_NUMBER    : u64 = 0x79_61_72_72_61_77_61_72;
+const MAGIC_NUMBER    : u64 = 0x79_61_72_72_61_77_61_72u64;
+//6172 6177 7272 7961
 
 /*
 enum ElementType {
@@ -113,8 +115,13 @@ impl RawArrayType for bf16 { fn ra_type_code() -> u64 { 5 } }
 impl RawArrayType for f16 { fn ra_type_code() -> u64 { 3 } }
 
 
+/// Combine the two necessary traits for efficient file parsing
+trait RawArrayIO : BufRead + Seek { }
+
 /// Wraps reading for some simpler parsing code
-struct RawArrayFile(BufReader);
+pub struct RawArrayFile(Box<dyn RawArrayIO>);
+
+impl<T: Read + Seek> RawArrayIO for BufReader<T> {}
 
 impl RawArrayFile {
     /// Open and validate a `RawArray` file and return a `File` handle, 
@@ -122,18 +129,24 @@ impl RawArrayFile {
     pub fn valid_open(filename: &str) -> io::Result<RawArrayFile> {
         let f = File::open(filename)?;
         let r = BufReader::new(f);
-        let magic = read_u64(&mut f);
+        let mut raf = RawArrayFile(Box::new(r));
+        let magic = raf.u64_at(0)?;
         if magic != MAGIC_NUMBER {
-            panic!("Not a RawArray file.");
+            return Err(Error::new(ErrorKind::InvalidData, 
+                    "Invalid magic, likely not a RawArray file."));
         }
-        Ok(RawArrayFile(r))
+        Ok(raf)
     }
 
-    pub fn u64_at(&mut self, offset: u64) -> u64 {
-        self.0.seek(SeekFrom::Start(offset));
+    /// Return a `u64` located at an offset within the file
+    /// without affecting current reading location
+    pub fn u64_at(&mut self, offset: u64) -> io::Result<u64> {
+        let cur_loc = self.0.seek(SeekFrom::Current(0))?;
+        self.0.seek(SeekFrom::Start(offset))?;
         let mut buf = [0u8; 8];
         self.0.read_exact(&mut buf)?;
-        u64::from_le_bytes(buf)
+        self.0.seek(SeekFrom::Start(cur_loc))?;
+        Ok(u64::from_le_bytes(buf))
     }
 }
 
