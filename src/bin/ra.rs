@@ -52,7 +52,9 @@ fn main() -> Result<(),Box<dyn Error>> {
                 let ndims = r.u64_at(40)?;
                 println!("{}", 40 + ndims*8);
             },
-            "reshape" => { },
+            "reshape" => { 
+                // TODO
+            },
             _ => { 
                 print_usage();
             },

@@ -126,8 +126,8 @@ impl<T: Read + Seek> RawArrayIO for BufReader<T> {}
 impl RawArrayFile {
     /// Open and validate a `RawArray` file and return a `File` handle, 
     /// but don't attempt to parse.
-    pub fn valid_open(filename: &str) -> io::Result<RawArrayFile> {
-        let f = File::open(filename)?;
+    pub fn valid_open<P: AsRef<Path>>(path: P) -> io::Result<RawArrayFile> {
+        let f = File::open(path)?;
         let r = BufReader::new(f);
         let mut raf = RawArrayFile(Box::new(r));
         let magic = raf.u64_at(0)?;
@@ -137,7 +137,6 @@ impl RawArrayFile {
         }
         Ok(raf)
     }
-
 
     /// Return next `u64` in the stream
     pub fn u64(&mut self) -> io::Result<u64> {
