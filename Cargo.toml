@@ -1,7 +1,7 @@
 [package]
 name = "rawarray"
 description = "simple file format for retrievably storing n-dimensional arrays"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["David S. Smith <david.smith@gmail.com>"]
 edition = "2018"
 readme = "README.md"
