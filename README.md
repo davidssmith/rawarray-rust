@@ -132,7 +132,9 @@ Getting
 To install for Rust, add the package entry to your `Cargo.toml` and in your
 source add `use rawarray::RawArray`.  
 
-... TODO: add some binary utils ...
+A binary utility called `ra` is included that allows you to do some basic
+operations on the command line, mostly examining header values, but also
+reshaping arrays.
 
 Implementations of RawArray exist for [Python, C, and
 Matlab](https://github.com/davidssmith/ra), and I have written a  Julia package called [RawArray.jl](https://github.com/davidssmith/RawArray.jl).
