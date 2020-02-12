@@ -586,9 +586,9 @@ mod tests {
         let vec1: Vec<f32> = vec![1.0, 2.0, 3.0, 4.0];
         let bvec: Vec<bf16> = vec1.iter().map(|x| bf16::from_f32(*x)).collect();
         let ra: RawArray<bf16> = bvec.clone().into();
-        ra.write("myarray.ra").ok();
-        let vec2: Vec<bf16> = RawArray::<bf16>::read("myarray.ra").unwrap().into();
-        fs::remove_file("myarray.ra").expect("unable to remove file");
+        ra.write("test_bf16.ra").ok();
+        let vec2: Vec<bf16> = RawArray::<bf16>::read("test_bf16.ra").unwrap().into();
+        fs::remove_file("test_bf16.ra").expect("unable to remove file");
 
         assert_eq!(bvec, vec2);
     }
@@ -599,9 +599,9 @@ mod tests {
         let vec1: Vec<f32> = vec![1.0, 2.0, 3.0, 4.0];
         let bvec: Vec<f16> = vec1.iter().map(|x| f16::from_f32(*x)).collect();
         let ra: RawArray<f16> = bvec.clone().into();
-        ra.write("myarray.ra").ok();
-        let vec2: Vec<f16> = RawArray::<f16>::read("myarray.ra").unwrap().into();
-        fs::remove_file("myarray.ra").expect("unable to remove file");
+        ra.write("test_f16.ra").ok();
+        let vec2: Vec<f16> = RawArray::<f16>::read("test_f16.ra").unwrap().into();
+        fs::remove_file("test_f16.ra").expect("unable to remove file");
 
         assert_eq!(bvec, vec2);
     }
