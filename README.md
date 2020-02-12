@@ -132,7 +132,6 @@ Getting
 To install for Rust, add the package entry to your `Cargo.toml` and in your
 source add `use rawarray::RawArray`.  
 
-
 A binary utility called `ra` is included that allows you to do some basic
 operations on the command line, mostly examining header values, but also
 reshaping arrays.

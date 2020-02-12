@@ -58,6 +58,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 print_usage();
             }
         }
+
     }
 
     Ok(())
