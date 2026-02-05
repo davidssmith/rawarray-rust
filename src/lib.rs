@@ -365,10 +365,10 @@ impl<T: RawArrayType> From<ArrayD<T>> for RawArray<T> {
     }
 }
 
-impl<T: RawArrayType> Into<Vec<T>> for RawArray<T> {
+impl<T: RawArrayType> From<RawArray<T>> for Vec<T> {
     /// Create a `Vec<T>` from a `RawArray<T>`
-    fn into(self) -> Vec<T> {
-        self.data
+    fn from(ra: RawArray<T>) -> Vec<T> {
+        ra.data
     }
 }
 
@@ -376,10 +376,10 @@ impl<T: RawArrayType> Into<Vec<T>> for RawArray<T> {
 /// If upgrading from an earlier version and this conversion fails to compile,
 /// add `ndarray` to your Cargo.toml features.
 #[cfg(feature = "ndarray")]
-impl<T: RawArrayType> Into<Array1<T>> for RawArray<T> {
-    /// Create a `Vec<T>` from a `RawArray<T>`
-    fn into(self) -> Array1<T> {
-        Array::from(self.data)
+impl<T: RawArrayType> From<RawArray<T>> for Array1<T> {
+    /// Create an `Array1<T>` from a `RawArray<T>`
+    fn from(ra: RawArray<T>) -> Array1<T> {
+        Array::from(ra.data)
     }
 }
 
