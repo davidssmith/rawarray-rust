@@ -6,6 +6,23 @@ Welcome to the RawArray crate!
 
 <p align="center"> <img src="ra.svg" width="120"> </p>
 
+
+Release Notes
+-------------
+
+**Optional Features**: As of version 0.1.3, this crate uses optional features to reduce dependencies for
+basic use cases. If you're upgrading and getting compile errors about missing
+types, you may need to add feature flags:
+
+- **`half`** (default): Support for half-precision floats (`f16`, `bf16`).
+  Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["half"] }`
+
+- **`ndarray`** (default): Support for conversion from/to `ndarray::Array` types.
+  Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["ndarray"] }`
+
+- **`num-complex`** (default): Support for complex numbers via `num_complex::Complex`.
+ Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["num-complex"] }`
+
 Introduction
 ------------
 
