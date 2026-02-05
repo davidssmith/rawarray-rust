@@ -333,7 +333,7 @@ impl<T: RawArrayType> From<Vec<T>> for RawArray<T> {
 impl<T: RawArrayType> From<ArrayD<T>> for RawArray<T> {
     /// Create a `RawArray<T>` from an `ArrayD<T>`
     fn from(a: ArrayD<T>) -> RawArray<T> {
-        a.into_raw_vec().into()
+        a.into_raw_vec_and_offset().0.into()
     }
 }
 

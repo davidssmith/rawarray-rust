@@ -1,9 +1,9 @@
 [package]
 name = "rawarray"
 description = "simple file format for retrievably storing n-dimensional arrays"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["David S. Smith <david.smith@gmail.com>"]
-edition = "2018"
+edition = "2021"
 readme = "README.md"
 categories = ["science", "mathematics", "encoding", "filesystem", "data-structures"]
 homepage = "https://crates.io/crates/rawarray"
@@ -12,13 +12,11 @@ license = "MIT"
 
 [dependencies]
 argparse = "0.2.2"
-half = "1.4.0"
-#itertools = "0.8.2"
+half = "2.7.1"
 itertools-num = "0.1.3"
-#microbench = "0.5.0"
-ndarray = "0.13.0"
+ndarray = "0.17.2"
 num-traits = "0.2.10"
-num-complex = "0.2.3"
+num-complex = "0.4.6"
 
 #[package.metadata.docs.rs]
 #all-features = true
