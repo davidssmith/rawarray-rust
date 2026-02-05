@@ -14,6 +14,26 @@
 //! Rather than start another gif-like conflict, I think either is
 //! fine.
 //!
+//! # Optional Features
+//!
+//! As of version 0.1.3, this crate uses optional features to reduce dependencies.
+//! By default, all features are enabled for backward compatibility. If you're upgrading
+//! and getting compile errors about missing types, you may need to add feature flags:
+//!
+//! - **`half`** (default): Support for half-precision floats (`f16`, `bf16`).
+//!   Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["half"] }`
+//!
+//! - **`ndarray`** (default): Support for conversion from/to `ndarray::Array` types.
+//!   Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["ndarray"] }`
+//!
+//! - **`num-complex`** (default): Support for complex numbers via `num_complex::Complex`.
+//!   Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["num-complex"] }`
+//!
+//! To use a minimal version with no optional features:
+//! ```toml
+//! rawarray = { version = "0.1.3", default-features = false }
+//! ```
+//!
 //! # Quick Start
 //!
 //! ```
@@ -33,8 +53,11 @@
 
 #![deny(warnings, missing_docs)]
 
+#[cfg(feature = "half")]
 use half::prelude::*;
+#[cfg(feature = "ndarray")]
 use ndarray::{Array, Array1, ArrayD};
+#[cfg(feature = "num-complex")]
 use num_complex::Complex;
 use std::fmt::{Debug, Display};
 use std::fs::File;
@@ -47,21 +70,7 @@ const FLAG_ENCODED: u64 = 2; // run-length encoding for Ints
 const FLAG_BITS: u64 = 4; // array element is a single bit
 const ALL_KNOWN_FLAGS: u64 = FLAG_BIG_ENDIAN | FLAG_ENCODED | FLAG_BITS;
 // TODO: see if reading > 2 GB is a problem in Rust
-//const MAX_BYTES       : u64 = 1<<31;
-//
-//const MAGIC_NUMBER    : u64 = 0x79_61_72_72_61_77_61_72;
 const MAGIC_NUMBER: u64 = 0x79_61_72_72_61_77_61_72u64;
-//6172 6177 7272 7961
-
-/*
-enum ElementType {
-    User = 0,
-    Int,
-    UInt,
-    Float,
-    Complex,
-}
-*/
 
 /// Helper trait to constrain to elemental types that make sense.
 // ```rust
@@ -85,12 +94,17 @@ pub trait RawArrayType: Clone + Copy + Debug + Display + Send + Sync {
     /// on the user to deal with unknown types, hopefully through
     /// a pull request to this repo!
     /// ```
+    /// # #[cfg(feature = "num-complex")]
+    /// # fn test() {
     /// use num_complex::Complex;
     /// use rawarray::{RawArray, RawArrayType};
     /// assert_eq!(i8::ra_type_code(), 1);
     /// assert_eq!(u8::ra_type_code(), 2);
     /// assert_eq!(f32::ra_type_code(), 3);
     /// assert_eq!(Complex::<f32>::ra_type_code(), 4);
+    /// # }
+    /// # #[cfg(feature = "num-complex")]
+    /// # test();
     /// ```
     fn ra_type_code() -> u64 {
         0
@@ -157,21 +171,37 @@ impl RawArrayType for f64 {
         3
     }
 }
+/// Support for complex numbers is now behind the `num-complex` feature.
+/// If upgrading from an earlier version and this type is not found,
+/// add `num-complex` to your Cargo.toml features.
+#[cfg(feature = "num-complex")]
 impl RawArrayType for Complex<f32> {
     fn ra_type_code() -> u64 {
         4
     }
 }
+/// Support for complex numbers is now behind the `num-complex` feature.
+/// If upgrading from an earlier version and this type is not found,
+/// add `num-complex` to your Cargo.toml features.
+#[cfg(feature = "num-complex")]
 impl RawArrayType for Complex<f64> {
     fn ra_type_code() -> u64 {
         4
     }
 }
+/// Support for bfloat16 is now behind the `half` feature.
+/// If upgrading from an earlier version and this type is not found,
+/// add `half` to your Cargo.toml features.
+#[cfg(feature = "half")]
 impl RawArrayType for bf16 {
     fn ra_type_code() -> u64 {
         5
     }
 }
+/// Support for float16 is now behind the `half` feature.
+/// If upgrading from an earlier version and this type is not found,
+/// add `half` to your Cargo.toml features.
+#[cfg(feature = "half")]
 impl RawArrayType for f16 {
     fn ra_type_code() -> u64 {
         3
@@ -329,7 +359,10 @@ impl<T: RawArrayType> From<Vec<T>> for RawArray<T> {
         }
     }
 }
-
+/// Conversions from `ndarray::Array` types are now behind the `ndarray` feature.
+/// If upgrading from an earlier version and this conversion fails to compile,
+/// add `ndarray` to your Cargo.toml features.
+#[cfg(feature = "ndarray")]
 impl<T: RawArrayType> From<ArrayD<T>> for RawArray<T> {
     /// Create a `RawArray<T>` from an `ArrayD<T>`
     fn from(a: ArrayD<T>) -> RawArray<T> {
@@ -344,6 +377,10 @@ impl<T: RawArrayType> Into<Vec<T>> for RawArray<T> {
     }
 }
 
+/// Conversions to `ndarray::Array1` are now behind the `ndarray` feature.
+/// If upgrading from an earlier version and this conversion fails to compile,
+/// add `ndarray` to your Cargo.toml features.
+#[cfg(feature = "ndarray")]
 impl<T: RawArrayType> Into<Array1<T>> for RawArray<T> {
     /// Create a `Vec<T>` from a `RawArray<T>`
     fn into(self) -> Array1<T> {
@@ -580,6 +617,7 @@ impl<T: RawArrayType> RawArray<T> {
 #[cfg(test)]
 mod tests {
     #[test]
+    #[cfg(feature = "half")]
     fn bf16() {
         use super::*;
         use std::fs;
@@ -593,6 +631,7 @@ mod tests {
         assert_eq!(bvec, vec2);
     }
     #[test]
+    #[cfg(feature = "half")]
     fn f16() {
         use super::*;
         use std::fs;

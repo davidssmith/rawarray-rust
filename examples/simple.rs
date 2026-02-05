@@ -1,18 +1,23 @@
-
 extern crate rawarray;
+
+#[cfg(feature = "num-complex")]
 use rawarray::RawArray;
 
-use std::fs;
-use std::io;
+#[cfg(feature = "num-complex")]
 use num_complex::Complex;
+#[cfg(feature = "num-complex")]
+use std::fs;
+#[cfg(feature = "num-complex")]
+use std::io;
 
-/// Simple example of reading and writing a RawArray and convert to 
+/// Simple example of reading and writing a RawArray and convert to
 /// and from Vec<T>.
 ///
-/// Note that the biggest change when doing this in Rust compared to 
-/// other languages is that you have to specify the elemental type 
+/// Note that the biggest change when doing this in Rust compared to
+/// other languages is that you have to specify the elemental type
 /// (`eltype`) in the code, so that the appropriate functions can be
 /// monomorphized.
+#[cfg(feature = "num-complex")]
 fn main() -> io::Result<()> {
     let original = RawArray::<Complex<f32>>::read("examples/test.ra")?;
     println!("{}", original);
@@ -33,4 +38,12 @@ fn main() -> io::Result<()> {
     fs::remove_file("tmp.ra")?;
 
     Ok(())
+}
+
+#[cfg(not(feature = "num-complex"))]
+fn main() {
+    eprintln!("Error: The 'num-complex' feature is required to run this example.");
+    eprintln!("Please enable it with:");
+    eprintln!("  cargo run --example simple --features num-complex");
+    std::process::exit(1);
 }

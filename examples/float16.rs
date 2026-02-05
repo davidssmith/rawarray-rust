@@ -1,8 +1,13 @@
-use rawarray::RawArray;
+#[cfg(feature = "half")]
 use half::prelude::*;
+#[cfg(feature = "half")]
+use rawarray::RawArray;
+#[cfg(feature = "half")]
 use std::f32;
+#[cfg(feature = "half")]
 use std::fs;
 
+#[cfg(feature = "half")]
 fn bf16() {
     let vec1: Vec<f32> = vec![f32::consts::PI, f32::consts::E, f32::consts::LN_2, 6.02e23];
     println!("f32: {:?}", vec1);
@@ -23,9 +28,9 @@ fn bf16() {
     println!();
     fs::remove_file("bfloat16.ra").expect("unable to remove file");
     assert_eq!(bvec, vec2);
-
 }
 
+#[cfg(feature = "half")]
 fn f16() {
     let vec1: Vec<f32> = vec![f32::consts::PI, f32::consts::E, f32::consts::LN_2, 6.02e23];
     println!("f32: {:?}", vec1);
@@ -48,7 +53,16 @@ fn f16() {
     assert_eq!(bvec, vec2);
 }
 
+#[cfg(feature = "half")]
 fn main() {
     bf16();
     f16();
+}
+
+#[cfg(not(feature = "half"))]
+fn main() {
+    eprintln!("Error: The 'half' feature is required to run this example.");
+    eprintln!("Please enable it with:");
+    eprintln!("  cargo run --example float16 --features half");
+    std::process::exit(1);
 }
