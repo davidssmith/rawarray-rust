@@ -16,9 +16,9 @@
 //!
 //! # Optional Features
 //!
-//! As of version 0.1.3, this crate uses optional features to reduce dependencies.
-//! By default, all features are enabled for backward compatibility. If you're upgrading
-//! and getting compile errors about missing types, you may need to add feature flags:
+//! As of version 0.1.3, this crate uses optional features to reduce dependencies for
+//! basic use cases. If you're upgrading and getting compile errors about missing
+//! types, you may need to add feature flags:
 //!
 //! - **`half`** (default): Support for half-precision floats (`f16`, `bf16`).
 //!   Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["half"] }`
@@ -28,11 +28,6 @@
 //!
 //! - **`num-complex`** (default): Support for complex numbers via `num_complex::Complex`.
 //!   Add to `Cargo.toml` if needed: `rawarray = { version = "0.1.3", features = ["num-complex"] }`
-//!
-//! To use a minimal version with no optional features:
-//! ```toml
-//! rawarray = { version = "0.1.3", default-features = false }
-//! ```
 //!
 //! # Quick Start
 //!
